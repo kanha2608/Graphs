@@ -1,0 +1,42 @@
+class Solution 
+{
+    public:
+    int dx[8] = {-2, -1, 1 , 2 , 2, 1, -1, -2};
+    int dy[8] = {1, 2, 2, 1 , -1 ,-2, -2, -1};
+    int dis[1001][1001] , vis[1001][1001];
+    int sx, sy , ex ,ey , n;
+    bool isvalid(int x , int y){
+        if(x < 1 || x > n || y < 1 || y > n || vis[x][y])   return false;
+        return true;
+    }
+    //Function to find out minimum steps Knight needs to reach target position.
+	int minStepToReachTarget(vector<int>&KnightPos,vector<int>&TargetPos,int N)
+	{
+	    sx = KnightPos[0] ,sy = KnightPos[1];
+	    ex = TargetPos[0]  , ey = TargetPos[1];
+	    n = N;
+	    for(int i = 0 ; i <= 1000 ; i++){
+	        for(int j = 0 ; j<= 1000; j++){
+	            dis[i][j] = vis[i][j] = 0;
+	        }
+	    }
+	    queue<pair<int, int>> q;
+	    q.push({sx , sy});
+	    while(!q.empty()){
+	        sx = q.front().first;
+            sy = q.front().second;
+            q.pop();
+            for(int i = 0 ; i < 8 ; i++){
+                if(isvalid(sx + dx[i] , sy + dy[i])){
+                    int nx = sx + dx[i] ;
+                    int ny = sy + dy[i];
+                    dis[nx][ny] = dis[sx][sy] + 1;
+                    vis[nx][ny] =1;
+                    q.push({nx, ny});
+                }
+            }
+	    }
+	    return dis[ex][ey];
+	    
+	}
+};
