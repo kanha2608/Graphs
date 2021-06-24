@@ -1,0 +1,15 @@
+vector<int> parent(1000, -1);
+int find(int a){
+    if(parent[a] < 0)   return a;
+    return parent[a] = find(parent[a]);
+}
+void union(int a, int b){
+    // parent a will contain number of element in this set.
+    parent[a] += parent[b];
+    parent[b] = a;
+}
+int main(){
+    int a , b;
+    a = find(a) , b = find(b);
+    if(a != b)  union(a,b);
+}
