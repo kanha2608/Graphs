@@ -1,0 +1,35 @@
+Here, first we set all node available if the current node is mouth of snake then it will immediately go to tell so we consider that this wasn't a node. 
+and change its value. Same for ladder and now run bfs.
+
+int Solution::snakeLadder(vector<vector<int> > &A, vector<vector<int> > &B) {
+    int arr[101];
+    for(int i = 1; i <= 100; i++){
+        arr[i] = i;
+    } 
+    for(auto ladder: A){
+        arr[ladder[0]] = ladder[1];
+    }
+    for(auto snake: B){
+        arr[snake[0]] = snake[1];
+    }
+    vector<int> vis(101,-1);
+    queue<int> q;
+    q.push(1);
+    vis[1] = 0;
+    while(!q.empty()){
+        int x = q.front();
+        q.pop();
+        for(int i = 1; i <= 6; i++){
+            int next = x + i;
+            if(next > 100) continue;
+            next = arr[next];
+            // int y = x +i;
+            if(vis[next] == -1){
+
+                vis[next] = vis[x] + 1;
+                q.push(next);
+            }
+        }
+    }
+    return vis[100];
+}
