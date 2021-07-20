@@ -1,0 +1,16 @@
+1. int find_set(int v) {
+    if (v == parent[v])
+        return v;
+    return parent[v] = find_set(parent[v]);
+}
+
+
+2. using iterative.
+
+int find(int v){
+  while(v != parent[v]){
+    parent[v] = parent[parent[v]];
+    v = parent[v];
+  }
+  return v;
+}
