@@ -1,0 +1,37 @@
+1. Create the graph and we know for a point to lie in side a circle its distance from center should be less than or equal to radius.
+
+
+
+int dx[8] = {-1,-1,0 , 1, 1, 1, 0 , -1};
+int dy[8] = {0 , 1 , 1 , 1, 0,-1,-1,-1};
+
+string Solution::solve(int A, int B, int C, int D, vector<int> &E, vector<int> &F) {
+    vector<vector<int>> rect(A+1, vector<int>(B+1 , 0));
+    for(int i = 0 ; i <= A; i++){
+        for(int j = 0 ; j <= B; j++){
+            for(int k = 0 ; k < C; k++){
+                if(sqrt(pow(E[k]-i , 2) + pow(F[k]-j , 2)) <= D){
+                    rect[i][j] = 1;
+                }
+            }
+        }
+    }
+    if(rect[0][0] == 1 || rect[A][B] == 1) return "NO";
+    queue<pair<int,int>> q;
+    q.push({0,0});
+    while(!q.empty()){
+        int x = q.front().first;
+        int y = q.front().second;
+        q.pop();
+        if(x == A && y == B) return "YES";
+        for(int i = 0 ; i < 8; i++){
+            int nX = x + dx[i] , nY = y + dy[i];
+            if(nX <= A && nX >= 0 && nY >= 0 && nY <= B && !rect[nX][nY]){
+                rect[nX][nY] = 1;
+                q.push({nX, nY});
+            }
+        }
+    }
+    return "NO";
+
+}
