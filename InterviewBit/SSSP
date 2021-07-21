@@ -1,0 +1,36 @@
+Bellman ford algorithm
+1. Here we try to achieve relaxation throught edge a b with weight c.
+We will run the loop n-1 times
+If there is an edge from a to b with weight a will try to relax path for b.
+
+
+
+In case of negative cycle, We know after relaxation if got to know any more relaxation then ther is negative cycle.
+class Solution {
+public:
+    const int inf = 1e9;
+	int isNegativeWeightCycle(int n, vector<vector<int>>edges){
+	    int m = edges.size();
+	    vector<int> dist(n, inf);
+	    
+	    dist[0] = 0;
+	    for(int i = 0 ; i < n-1; i++){
+	        for(int j = 0 ; j < m ;j++){
+	            if(dist[edges[j][0]] < inf){
+	                dist[edges[j][1]] = min(dist[edges[j][1]], dist[edges[j][0]] + edges[j][2]);
+	            }
+	        }
+	    }
+	    int ans = 0;
+	    for(int i = 0 ; i < n-1; i++){
+	        for(int j = 0 ; j < m ;j++){
+	            if(dist[edges[j][1]] > dist[edges[j][0]] + edges[j][2]){
+	
+	                return 1;
+	            }
+	        }
+	    }
+	    return 0;
+	    
+	}
+};
