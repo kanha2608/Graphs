@@ -1,0 +1,56 @@
+1. Maintain a priority queue and try to reduce distance of all neighbour of top element and if those reduced add to our queue.
+
+
+#include<bits/stdc++.h>
+using namespace std;
+
+#define nl "\n"
+
+#define PB push_back
+
+
+void solve(){
+    int n ,m;
+    cin>>n>>m;
+	vector<pair<int, int>> adj[n+1];
+	const int inf = 1e9 ;
+	
+    for(int i = 0 ; i  < m ;i++){
+        int u, v, w;
+        cin>>u>>v>>w;
+        adj[u].PB({v,w});
+    }
+    vector<int> dist(n+1, inf);
+    priority_queue<pair<int, int> , vector<pair<int,int>> , greater<pair<int,int>>> q;
+	q.push({0,1});
+	dist[1] = 0;
+	while(!q.empty()){
+		auto temp = q.top();
+		q.pop();
+		int curr_d = temp.first;
+		int curr = temp.second;
+		
+		for(auto edge : adj[curr]){
+			if(curr_d + edge.second < dist[edge.first]){
+				dist[edge.first] = curr_d + edge.second;
+				q.push({dist[edge.first] , edge.first});
+			}
+		}
+	}
+	for(int i = 2; i <= n ;i++){
+		cout<<dist[i]<<" ";
+	}
+	cout<<endl;
+    
+}
+int main(){
+    // freopen("input.txt", "r", stdin);
+    // freopen("output.txt", "w", stdout);
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+    cout.tie(0);
+    // int t;
+    // cin>>t;
+    // while(t--)
+    solve();   
+}
