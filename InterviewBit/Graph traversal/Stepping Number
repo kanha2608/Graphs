@@ -1,0 +1,45 @@
+Here, suppose we have a step number 
+how can you expand this. for this either we will add last digit + 1 at end or lastdigit -1
+eg.
+
+  21  now we can add 0 as well as 2.
+  
+ Also we know every single digit number is a step number so we will try to build the relation.
+ 
+ Also edge case if number is 0 so we add 01 010 012 all will gonna be cover with 1.
+ so just add 0 in case.
+ 
+ Also if number is already 9 we can't stepup only step down , similarily for 0.
+ 
+ void bfs(int i , int n ,int m , vector<int>& ans){
+    queue<int> q;
+    q.push(i);
+    while(!q.empty()){
+        int s = q.front();
+        q.pop();
+        if(s <= m && s >= n)    ans.push_back(s);
+        if(s > m) continue;
+        int lastd = s%10;
+        int sa = s*10 + (lastd+1);
+        int sb = s*10 + (lastd-1);
+
+        if(lastd < 9){
+            q.push(sa);
+        }
+        if(lastd > 0) 
+            q.push(sb);
+    }
+}
+vector<int> Solution::stepnum(int A, int B) {
+    
+    vector<int> ans;
+    if(A == 0) ans.push_back(0);
+    
+
+
+    for(int i = 1; i <= 9; i++){
+        bfs(i , A, B ,ans);
+    }
+    sort(ans.begin(), ans.end());
+    return ans;
+}
