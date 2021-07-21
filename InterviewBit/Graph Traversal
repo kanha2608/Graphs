@@ -1,0 +1,23 @@
+Path in directed Graph.
+
+
+
+int Solution::solve(int A, vector<vector<int> > &B) {
+    vector<int> vis(A+1,0);
+    vector<int> adj[A+1];
+    for(int i = 0 ; i < B.size(); i++){
+        adj[B[i][0]].push_back(B[i][1]);
+    }
+    function<void(int)> dfs = [&](int node){
+        vis[node] = 1;
+        for(auto x: adj[node]){
+            if(!vis[x]) 
+                dfs(x);
+        }
+    };
+    dfs(1);
+    return vis[A];
+}
+
+
+Use of lambda function.
