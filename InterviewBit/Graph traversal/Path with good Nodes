@@ -1,0 +1,29 @@
+Here, we do dfs, maintain a counter that will count number of good node in that path. And then check when it is leaf node,
+Condition for leaf node :- if(adj[i].size() && par != -1) means leaf node.
+
+Use of lambda to avoid function sending.
+
+
+int Solution::solve(vector<int> &A, vector<vector<int> > &B, int C) {
+    int n = A.size();
+    vector<int> adj[n+1];
+    for(auto x: B){
+        adj[x[0]].push_back(x[1]);
+        adj[x[1]].push_back(x[0]);
+    }
+
+    int ans = 0;
+    function<void(int , int , int)> dfs = [&](int i ,int par,int val){
+        val += (A[i-1]);
+        if(adj[i].size() == 1 && par != -1 && val <= C){
+            ans++;
+        }
+        for(int x : adj[i]){
+            if(x != par){
+                dfs(x, i, val);
+            }
+        }
+    };
+    dfs(1, -1, 0);
+    return ans;
+}
