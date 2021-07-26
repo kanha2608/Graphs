@@ -1,0 +1,30 @@
+int Solution::knight(int A, int B, int C, int D, int E, int F) {
+    vector<vector<int>> dist(A+1, vector<int>(B+1,1e9));
+    vector<vector<int>> vis(A+1, vector<int>(B+1,0));
+    dist[C][D] = 0;
+    int dx[8] = {-2,-1,1,2,2,1,-1,-2};
+    int dy[8] = {1,2,2,1,-1,-2,-2,-1};
+    
+    function<bool(int , int)> isvalid = [&](int X, int Y){
+        return (X >= 1 && X <= A && Y <= B && Y >= 1 && !vis[X][Y] );
+    };
+
+    queue<pair<int,int>> q;
+    q.push({C,D});
+    while(!q.empty()){
+        auto temp = q.front();
+        q.pop();
+        int x = temp.first, y = temp.second;
+        for(int i = 0; i < 8; i++){
+            int X = x + dx[i] , Y = y + dy[i];
+            if(isvalid(X,Y)){
+                vis[X][Y] = 1;
+                q.push({X,Y});
+                dist[X][Y] = dist[x][y] + 1;
+            }
+        }
+    }
+    if(dist[E][F] == 1e9)   return -1;
+    return dist[E][F];
+
+}
