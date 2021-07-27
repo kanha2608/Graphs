@@ -1,0 +1,48 @@
+#define pii pair<int,int>
+
+int Solution::solve(int A, vector<vector<int> > &B, int C, int D, vector<vector<int> > &E) {
+    vector<pii> adj[A+1];
+    for(auto x: B){
+        int a = x[0],  b = x[1] ,  w= x[2];
+        adj[a].push_back({b,w});
+    }
+    int ans = INT_MAX , curr = 0;
+
+    function<void()> dijikstra = [&](){
+        vector<int> dist(A+1, INT_MAX) , vis(A+1, 0);
+        dist[C] = 0;
+        priority_queue<pii, vector<pii>, greater<pii>> pq;
+        pq.push({0,C});
+        while(!pq.empty()){
+            auto temp = pq.top();
+            pq.pop();
+            int curr_d = temp.first, curr = temp.second;
+            // if(vis[curr]) continue;
+
+            for(auto child : adj[curr]){
+                int node = child.first, weight = child.second;
+                if(dist[node] > curr_d + weight){
+                    dist[node] = curr_d + weight;
+                    pq.push({dist[node], node});
+                }
+            }
+            // vis[curr] = 1;
+        }
+        ans = min(ans, dist[D]);
+    };
+    for(auto x: E){
+        int a = x[0],  b = x[1] ,  w= x[2];
+        adj[a].push_back({b,w});
+        adj[b].push_back({a,w});
+        dijikstra();
+        
+        // ans = min(ans, dist[D]);
+
+        adj[a].pop_back();
+        adj[b].pop_back();
+
+    }
+    if(ans == INT_MAX)  return -1;
+    return ans;
+    
+}
