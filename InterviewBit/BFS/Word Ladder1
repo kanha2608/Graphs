@@ -1,0 +1,78 @@
+Here, Keep in mind of passing string as reference since it would create copy at each time. will give TLE
+
+bool isvalid(string& a, string& b){
+    int cnt = 0;
+    for(int i = 0 ; i  < a.size(); i++){
+        if(a[i] != b[i])    cnt++;
+        if(cnt > 1) return false;
+    }
+    return true;
+}
+int Solution::solve(string A, string B, vector<string> &C) {
+    
+    int n = C.size();
+    vector<bool> vis(n, false);
+    queue<pair<string, int>> q;
+    q.push({A,1});
+    while(!q.empty()){
+        auto temp = q.front();
+        q.pop();
+        if(temp.first == B) return temp.second;
+        if(isvalid(temp.first, B)) return temp.second + 1;
+
+        for(int i=0;i<n;i++)
+        {
+            if(vis[i]==false && isvalid(temp.first, C[i]))
+            {
+                vis[i] = true;
+                q.push({C[i],temp.second +1});
+            }
+        }
+
+    }
+    return 0; 
+}
+
+
+Method 2-
+
+// int Solution::solve(string A, string B, vector<string> &C) {
+//     unordered_map<string,bool> vis;
+//     for(string temp:C)
+//     {
+//         vis[temp]=false;
+//     }
+//     if(vis.find(B)==vis.end())
+//     return 0;
+//     queue<string> q;
+//     q.push(A);
+//     vis[A]=true;
+//     int level=1;
+//     while(!q.empty())
+//     {
+//         int len=q.size();
+//         while(len--)
+//         {
+//             string s=q.front();
+//             q.pop();
+//             for(int i=0;i<s.size();i++)
+//             {
+//                 string temp=s;
+//                 for(int j=0;j<26;j++)
+//                 {
+//                     temp[i]=j+'a';
+//                     if(temp==B)
+//                     return level+1;
+//                     if(vis.find(temp)!=vis.end() and vis[temp]==false)
+//                     {
+//                         q.push(temp);
+//                         //cout<<temp<<"  "<<level<<endl;
+//                         vis[temp]=true;
+//                     }
+//                 }
+//             }
+//         }
+//         level++;
+//     }
+//     return level;
+// }
