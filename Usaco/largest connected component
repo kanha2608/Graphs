@@ -1,0 +1,62 @@
+Do run dfs. But make sure that each time you have to clear your visited array since it is directed graph.
+
+#include <bits/stdc++.h>
+
+using namespace std;
+#define int long long
+
+// const int maxN = 3005;
+// vector<int> adj[maxN] , vis(maxN);
+int dist(int x, int x2, int y, int y2){
+    int xd = (x - x2)*(x - x2);
+    int yd = (y - y2)*(y - y2);
+
+    return xd + yd;
+
+}
+int32_t main() {
+    freopen("moocast.in", "r", stdin);
+	freopen("moocast.out", "w", stdout);
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
+    int n;
+    cin>>n;
+    vector<vector<int>> arr(n,vector<int>(3,0));
+    for(int i = 0; i < n; i++){
+        cin>>arr[i][0]>>arr[i][1]>>arr[i][2];
+    }
+    vector<int> adj[201] , vis(201);
+    for(int i = 0; i < n; i++){
+        int x = arr[i][0] , y = arr[i][1] , p = arr[i][2];
+        for(int j = 0; j < n; j++){
+            if(i == j)  continue;
+            int new_x = arr[j][0] , new_y = arr[j][1] , new_p = arr[j][2];
+            if(dist(x,new_x,y,new_y) <= p*p){
+                adj[i].push_back(j);
+            }
+        }
+    }
+    int l = 0;
+
+    function<void(int,int&)> dfs = [&](int node, int& curr){
+        vis[node] = 1;
+        curr++;
+        for(auto x: adj[node]){
+            if(!vis[x]){
+                dfs(x, curr);
+            }
+        }
+    };
+
+    for(int i = 0; i < n; i++){
+        if(!vis[i]){
+            fill(vis.begin() , vis.end(), 0);
+            int curr = 0;
+            dfs(i ,curr);       // Update curr to the number of times the message can pass.
+            l = max(l , curr);
+        }
+    }
+    cout<<l<<"\n";
+}
+
+
