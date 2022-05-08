@@ -1,40 +1,45 @@
-Here, We will use bfs to first find largest level node and then again use bfs.
-
-
+1. Find farthest node and then again start bfs from that node. 
+// do notice in the inside loop, q.size() store it beforehand.
 
 int Solution::solve(vector<int> &A) {
     int n = A.size();
-    if(n == 1) return 0;
-    vector<int> adj[n+1];
+    if(n < 3) return n-1;
+    vector<int> adj[n];
     int root;
-    for(int i = 0 ; i  < n; i++){
-        if(A[i] == -1){
-            root = i;
-            continue;
+    for(int i = 0; i < n; i++){
+        if(A[i] == -1) root = i;
+        else{
+            adj[i].push_back(A[i]);
+            adj[A[i]].push_back(i);
         }
-        adj[i].push_back(A[i]);
-        adj[A[i]].push_back(i);
     }
-    function<pair<int,int>(int)> bfs = [&](int src){
-        queue<pair<int,int>> q;
-        q.push({src, 0});
-        vector<int> vis(n+1 , 0);
-        pair<int,int> u;
+    vector<int> vis(n,0);
+    function<int(int)> bfs = [&](int root){
+        queue<int> q;
+        q.push(root);
+        
+        vis[root] = 1;
+        int timer = 1;
         while(!q.empty()){
-            u = q.front();
-            vis[u.first] = 1;
-            q.pop();
-            for(auto x: adj[u.first]){
-                if(!vis[x]){
-                    q.push({x, u.second+1});
+            timer++;
+            int temp = q.size();
+            for(int i = 0; i < temp; i++){
+                root = q.front();
+                q.pop();
+                for(auto &x: adj[root]){
+                    if(!vis[x]){
+                        vis[x] = timer;
+                        q.push(x);
+                    }
                 }
             }
         }
-        return u;
+        return root;
     };
+    
+    root = bfs(root);
+    fill(vis.begin(), vis.end(), 0);
+    root = bfs(root);
+    return vis[root] - 1;
 
-
-    pair<int, int> end1 = bfs(0);
-    pair<int,int> end2 = bfs(end1.first);
-    return end2.second;
 }
