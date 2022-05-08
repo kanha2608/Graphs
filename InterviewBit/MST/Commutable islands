@@ -1,0 +1,28 @@
+int Solution::solve(int A, vector<vector<int> > &B) {
+    vector<int> par(A+1, -1), rank(A,1);
+    for(int i = 1; i <= A; i++) par[i] = i;
+
+    function<int(int)> find = [&](int x){
+        if(x == par[x]) return x;
+        return par[x] = find(par[x]);
+    };
+    function<void(int,int)> un = [&](int x, int y){
+        if(rank[x] < rank[y]) swap(x, y);
+        par[y] = x;
+        if(rank[x] == rank[y]) rank[x]++;
+    };
+    auto cmp = [&](vector<int>& a, vector<int>& b){
+        return a[2] < b[2];
+    };
+    sort(B.begin(), B.end(), cmp);
+    int ans = 0;
+    for(auto &ele: B){
+        int x = find(ele[0]) , y = find(ele[1]), c = ele[2];
+        if(x != y){
+            ans += c;
+            un(x, y);
+        }
+    }
+    return ans;
+
+}
