@@ -1,0 +1,78 @@
+There are two approach 1. is using dfs and second using bfs.
+
+Lets take bfs first. Suppose you visite root. Now insert that into hash and create copy for this
+Now, visit all its neighbors and if they are already visited then no need to create again pushing into
+instead just push into curr's neighbors. then finally return copy of root.
+
+
+
+/**
+ * Definition for undirected graph.
+ * struct UndirectedGraphNode {
+ *     int label;
+ *     vector<UndirectedGraphNode *> neighbors;
+ *     UndirectedGraphNode(int x) : label(x) {};
+ * };
+ */
+UndirectedGraphNode *Solution::cloneGraph(UndirectedGraphNode *node) {
+    if(!node) return NULL;
+    
+    unordered_map<UndirectedGraphNode*, UndirectedGraphNode*> copy;
+    queue<UndirectedGraphNode*> q;
+    UndirectedGraphNode* ret = new UndirectedGraphNode(node->label);
+    
+    q.push(node); 
+    copy[node] = ret;
+    UndirectedGraphNode* curr , *temp;
+    vector<UndirectedGraphNode*> neighbors;
+    while(!q.empty()){
+        curr = q.front();
+        q.pop();
+        neighbors = curr->neighbors;
+        int n = neighbors.size();
+        for(int i = 0; i < n; i++){
+            if(copy.find(neighbors[i]) != copy.end()){
+                copy[curr]->neighbors.push_back(copy[neighbors[i]]);
+            }
+            else{
+                temp = new UndirectedGraphNode(neighbors[i]->label);
+                copy[neighbors[i]] = temp;
+                copy[curr]->neighbors.push_back(temp);
+                q.push(neighbors[i]);
+            }
+        }
+    }
+    return ret;
+}
+
+
+
+2. Using DFS
+
+/**
+ * Definition for undirected graph.
+ * struct UndirectedGraphNode {
+ *     int label;
+ *     vector<UndirectedGraphNode *> neighbors;
+ *     UndirectedGraphNode(int x) : label(x) {};
+ * };
+ */
+UndirectedGraphNode *Solution::cloneGraph(UndirectedGraphNode *node) {
+    unordered_map<UndirectedGraphNode*, UndirectedGraphNode*> copy;
+    
+    function<UndirectedGraphNode*(UndirectedGraphNode* )> solve = [&](UndirectedGraphNode* root){
+        if(!root){
+            return (UndirectedGraphNode*)NULL;
+        }  
+        
+        if(copy.find(root) == copy.end()){
+            copy[root] = new UndirectedGraphNode(root->label);
+            for(auto neighbor : root->neighbors){
+                copy[root]->neighbors.push_back(solve(neighbor));
+            }
+        }
+        return copy[root];
+    };
+    
+    return solve(node);
+}
