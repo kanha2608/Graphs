@@ -1,0 +1,41 @@
+class Solution {
+public:
+    int longestCycle(vector<int>& edges) {
+        int n = edges.size();
+        vector<int> adj[n], vis(n),found(n);
+        
+        for(int i = 0; i < n; i++){
+            if(edges[i] != -1)  adj[i].push_back(edges[i]);
+        }
+        int ans = -1, cnt = 0, timer = 1;
+        
+        function<int(int, int)> dfs = [&](int i, int st){
+            vis[i] = timer++;
+            cnt++;
+            
+            for(auto &x: adj[i]){
+                if(!vis[x]){
+                    if(dfs(x,st)){
+                        return 1;
+                    } 
+                }
+                else if(vis[x] >= st){
+                    cnt = vis[i] - vis[x] + 1;
+                    return 1;
+                }
+            }
+            return 0;
+        };
+        
+        for(int i= 0; i < n; i++){
+            if(!vis[i] && dfs(i, timer)){
+                ans = max(ans, cnt);
+            }
+        }
+        return ans;
+    }
+};
+
+Make adjacancy list and then dfs if current child is visited and thats too in current visit then there will be cycle update answer. 
+How to check whether visit in current or previous? 
+Best use of timer make dfs call and if this node already visited check whether its timer is greater than this dfs start if yes so? then there is cycle.
